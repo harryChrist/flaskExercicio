@@ -14,6 +14,14 @@ function closeModal2() {
     document.getElementById('modal2').style.display = 'none';
 }
 
+function openModal3(symbol) {
+    document.getElementById('modal3').style.display = 'block';
+}
+
+function closeModal3() {
+    document.getElementById('modal3').style.display = 'none';
+}
+
 function converterUsdToCrypto(usd, crypto) {
     return usd / crypto;
 }
@@ -66,6 +74,30 @@ async function addDollar() {
         },
         body: JSON.stringify({
             value: document.getElementById('dollarAmount').value
+        })
+    });
+
+    if (response.ok) {
+        alert('Crypto added successfully');
+        reloadWallet();
+        fetchDollar()
+    } else {
+        alert('Failed to add crypto');
+    }
+    const cryptos = await response.json();
+
+    fetchDollar()
+    return cryptos;
+}
+
+async function remDollar() {
+    const response = await fetch('/remDolar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            value: document.getElementById('dollarAmount2').value
         })
     });
 

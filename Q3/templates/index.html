@@ -17,6 +17,7 @@
             <h2>Saldo em Dólares:</h2>
             <p id="balanceAmount">$0.00</p>
             <button type="button" onclick="openModal()">Adicionar Saldo</button>
+            <button type="button" onclick="openModal3()">Retirar Saldo</button>
             <button type="button" onclick="openModal2()">Transferir</button>
         </div>
         <div class="controls">
@@ -38,6 +39,15 @@
             <h2>Adicionar Saldo em Dólares</h2>
             <input type="number" id="dollarAmount" placeholder="Enter amount in dollars">
             <button onclick="addDollar()">Adicionar</button>
+        </div>
+    </div>
+
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal3()">&times;</span>
+            <h2>Remover Saldo em Dólares</h2>
+            <input type="number" id="dollarAmount2" placeholder="Enter amount in dollars">
+            <button onclick="remDollar()">Retirar</button>
         </div>
     </div>
 

@@ -121,6 +121,19 @@ def add_dolar():
             return jsonify({'message': 'Value is required in JSON data'}), 400
         dollares += value
         return jsonify({'message': 'Dolar added successfully!'}), 201
+    
+@app.route('/remDolar', methods=['POST'])
+def rem_dolar():
+    global dollares
+    if request.is_json:
+        data = request.get_json()  # {"value": 10.0}
+        value = float(data.get('value'))
+        if not value:
+            return jsonify({'message': 'Value is required in JSON data'}), 400
+        if value > dollares:
+            return jsonify({'message': 'Insufficient funds'}), 400
+        dollares -= value
+        return jsonify({'message': 'Dolar added successfully!'}), 201
 
 @app.route('/dollars', methods=['GET'])
 def get_dollars():
@@ -138,7 +151,7 @@ def index():
 
 # Inicia o túnel ngrok e executa a aplicação
 if __name__ == "__main__":
-    ngrok.set_auth_token("2QCXI66cGnJe6z1kX14lLz9FPhj_279vjFbJ8bJMGUr46AsGC")
+    ngrok.set_auth_token("2hY1rFnzlpnK6tWnpRmRokgAC1g_3kWnWX7Tkz8h4SQZViUTR")
     http_tunnel = ngrok.connect(5000)
     print("Public URL:", http_tunnel.public_url)
     app.run()
