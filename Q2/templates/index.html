@@ -24,6 +24,18 @@
             </div>
             <p id="loading" class="white-text">Loading...</p>
         </div>
+
+        <div class="container">
+            <input type="text" id="birthdate-input2" placeholder="DD/MM/AAAA">
+            <button onclick="jogoDoBicho()">Obter Jogo do Bicho</button>
+            <div id="message-container2" class="message-container2" style="display: none;">
+                <h1 class="title white-text">Jogo do Bico</h1>
+                <p class="label white-text">Bicho:</p>
+                <p id="bicho" class="data white-text"></p>
+            </div>
+            <p id="loading2" class="white-text">Loading...</p>
+
+        </div>
     </div>
     <script>
         const displayMessageOfTheDay = (data) => {
@@ -34,6 +46,10 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('message-container').style.display = 'block';
         };
+
+        const displayBicho = (data) => {
+            document.getElementById('bicho').textContent = data['bicho'];
+        }
 
         const fetchMessageOfTheDay = async () => {
             const userBirthDate = document.getElementById('birthdate-input').value;
@@ -47,6 +63,23 @@
                 console.error('Error fetching message of the day:', error);
             }
         };
+
+        const jogoDoBicho = async () => {
+            const userBirthDate = document.getElementById('birthdate-input2').value;
+
+            const apiUrl = `http://localhost:5000/api/bicho-da-sorte?data_nascimento=${userBirthDate}`;
+
+            document.getElementById('loading2').style.display = 'none';
+            document.getElementById('message-container2').style.display = 'block';
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                displayBicho(data);
+            } catch (error) {
+                console.error('Error fetching message of the day:', error);
+            }
+        }
 
     </script>
 </body>

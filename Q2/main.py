@@ -24,12 +24,12 @@ def bicho_da_sorte():
 
     if data_de_nascimento:
         bicho = escolhe_bicho(data_nascimento=data_de_nascimento)
-        return bicho
+        return { "bicho": bicho }
     else:
         return "Por favor, forneça a data de nascimento como parâmetro na URL."
 
 if __name__ == '__main__':
-    ngrok.set_auth_token("2QCXI66cGnJe6z1kX14lLz9FPhj_279vjFbJ8bJMGUr46AsGC")
+    ngrok.set_auth_token("2hY1rFnzlpnK6tWnpRmRokgAC1g_3kWnWX7Tkz8h4SQZViUTR")
     http_tunnel = ngrok.connect(5000)
     print("Public URL:", http_tunnel.public_url)
     app.run()
