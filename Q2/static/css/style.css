@@ -1,0 +1,57 @@
+/* styles.css */
+
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.background {
+    background-image: url('background.png'); /* Substitua pelo caminho da sua imagem de fundo */
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+    border-radius: 10px;
+}
+
+.message-container {
+    text-align: left;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.data {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.message {
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 24px;
+}
+
+.white-text {
+    color: #fff; /* Cor branca para o texto */
+}

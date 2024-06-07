@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptocurrency List</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+    <div class="wallet">
+        <h1>Minha Carteira de Criptomoeda</h1>
+        <div class="balance">
+            <h2>Saldo em Dólares:</h2>
+            <p id="balanceAmount">$0.00</p>
+            <button type="button" onclick="openModal()">Adicionar Saldo</button>
+        </div>
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search for a cryptocurrency">
+            <button type="button" onclick="addCrypto()">Add Cryptocurrency</button>
+            <select id="cryptoSelect">
+                <option value="">Select a cryptocurrency</option>
+            </select>
+            <button type="button" onclick="reloadWallet()">Reload Wallet</button>
+        </div>
+        <div class="cryptos" id="cryptos">
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Adicionar Saldo em Dólares</h2>
+            <input type="number" id="dollarAmount" placeholder="Enter amount in dollars">
+            <button onclick="addBalance()">Adicionar</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagem do Dia</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="background">
+        <div class="container">
+            <input type="text" id="birthdate-input" placeholder="DD/MM/AAAA">
+            <button onclick="fetchMessageOfTheDay()">Obter Mensagem do Dia</button>
+            <div id="message-container" class="message-container" style="display: none;">
+                <h1 class="title white-text">Mensagem do Dia</h1>
+                <p class="label white-text">Data de Nascimento:</p>
+                <p id="birthdate" class="data white-text"></p>
+                <p class="label white-text">Signo:</p>
+                <p id="sign" class="data white-text"></p>
+                <p class="label white-text">Mensagem:</p>
+                <p id="message" class="message white-text"></p>
+            </div>
+            <p id="loading" class="white-text">Loading...</p>
+        </div>
+    </div>
+    <script>
+        const displayMessageOfTheDay = (data) => {
+            document.getElementById('birthdate').textContent = data['data-de-nascimento'];
+            document.getElementById('sign').textContent = data['signo'];
+            document.getElementById('message').textContent = data['mensagem'];
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('message-container').style.display = 'block';
+        };
+
+        const fetchMessageOfTheDay = async () => {
+            const userBirthDate = document.getElementById('birthdate-input').value;
+            const apiUrl = `http://localhost:5000/api/mensagem-do-dia?data_nascimento=${userBirthDate}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                displayMessageOfTheDay(data);
+            } catch (error) {
+                console.error('Error fetching message of the day:', error);
+            }
+        };
+
+    </script>
+</body>
+
+</html>
