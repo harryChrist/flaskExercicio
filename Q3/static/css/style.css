@@ -5,7 +5,7 @@ body {
 }
 
 .wallet {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -20,6 +20,8 @@ body {
 
 .balance {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .balance h2 {
@@ -192,7 +194,7 @@ body {
     position: relative;
     border: 0;
     background: none;
-    padding: 9px 22px 9px 16px;
+    padding: 0px 0px 0px 0px;
     line-height: 26px;
     font-family: inherit;
     font-weight: 600;

@@ -16,6 +16,11 @@ def converter_usd_to_crypto(usd, crypto):
 def converter_crypto_to_usd(valor_btc, preco_btc):
     return valor_btc * preco_btc
 
+def converter_crypto_to_crypto(valor_origem, preco_origem, preco_destino):
+    valor_em_usd = valor_origem * preco_origem  # Convertendo para dólares
+    valor_em_destino = valor_em_usd / preco_destino  # Convertendo de dólares para a criptomoeda destino
+    return valor_em_destino
+
 def find_item_by_symbol(symbol, data_list):
     for item in data_list:
         if item.get("symbol") == symbol:
@@ -61,15 +66,47 @@ def add_crypto():
     else:
         return jsonify({'message': 'Request must be JSON'}), 400
     
-@app.route('/transferirDollarToCrypto', methods=['POST'])
+@app.route('/transferirCrypto', methods=['POST'])
 def transferir_dollares():
     global dollares
     if request.is_json:
-        data = request.get_json()  # {"value": 10.0}
-        value = data.get('value')
-        if not value:
+        data = request.get_json()  # {"symbol": "Bitcoin", "symbol2": "BTC", amount: '10'}
+        symbol = data.get('symbol')
+        symbol2 = data.get('symbol2')
+        amount = data.get('amount')
+        print(data)
+        if not amount:
             return jsonify({'message': 'Value is required in JSON data'}), 400
-        dollares -= value
+        if symbol == symbol2:
+            return jsonify({'message': 'Cryptocurrency cannot be the same'}), 400
+        
+        if symbol == "dollar":
+            cryptoReceiver = find_item_by_symbol(symbol2, coins)
+            if not cryptoReceiver:
+                return jsonify({'message': 'Cryptocurrency not found'}), 404
+            dollares -= amount
+            cryptoReceiver['money'] += converter_usd_to_crypto(amount, cryptoReceiver['current_price'])
+            return jsonify({'message': 'Dollar transfered successfully!'}), 201
+        
+        if symbol2 == "dollar":
+            cryptoSender = find_item_by_symbol(symbol, coins)
+            if not cryptoSender:
+                return jsonify({'message': 'Cryptocurrency not found'}), 404
+            dollares += converter_crypto_to_usd(amount, cryptoSender['current_price'])
+            cryptoSender['money'] -= amount
+            return jsonify({'message': 'Dollar transfered successfully!'}), 201
+
+        cryptoSender = find_item_by_symbol(symbol, coins)
+        cryptoReceiver = find_item_by_symbol(symbol2, coins)
+        if not cryptoSender or not cryptoReceiver:
+            return jsonify({'message': 'Cryptocurrency not found'}), 404
+        
+        if amount > cryptoSender['money']:
+            return jsonify({'message': 'Insufficient funds'}), 400
+        
+        cryptoSender['money'] -= amount
+        cryptoReceiver['money'] += converter_crypto_to_crypto(amount, cryptoSender['current_price'], cryptoReceiver['current_price'])
+    
         return jsonify({'message': 'Dollar transfered successfully!'}), 201
     else:
         return jsonify({'message': 'Request must be JSON'}), 400
@@ -79,16 +116,16 @@ def add_dolar():
     global dollares
     if request.is_json:
         data = request.get_json()  # {"value": 10.0}
-        value = data.get('value')
+        value = float(data.get('value'))
         if not value:
             return jsonify({'message': 'Value is required in JSON data'}), 400
-        dolllares += value
+        dollares += value
         return jsonify({'message': 'Dolar added successfully!'}), 201
 
 @app.route('/dollars', methods=['GET'])
 def get_dollars():
     global dollares
-    return dollares
+    return { 'money': dollares }
 
 @app.route('/wallets', methods=['GET'])
 def get_wallets():

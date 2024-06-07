@@ -6,6 +6,14 @@ function closeModal() {
     document.getElementById('modal').style.display = 'none';
 }
 
+function openModal2(symbol) {
+    document.getElementById('modal2').style.display = 'block';
+}
+
+function closeModal2() {
+    document.getElementById('modal2').style.display = 'none';
+}
+
 function converterUsdToCrypto(usd, crypto) {
     return usd / crypto;
 }
@@ -33,11 +41,95 @@ async function fetchCryptos() {
     return cryptos;
 }
 
+async function fetchWallet() {
+    const response = await fetch('/wallets');
+    const wallet = await response.json();
+    return wallet;
+}
+
+async function fetchDollar() {
+    const response = await fetch('/dollars');
+    const dollars = await response.json();
+
+    console.log(dollars)
+
+    const balanceElement = document.getElementById('balanceAmount');
+    balanceElement.innerText = `$${dollars.money}`
+    return cryptos;
+}
+
+async function addDollar() {
+    const response = await fetch('/addDolar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            value: document.getElementById('dollarAmount').value
+        })
+    });
+
+    if (response.ok) {
+        alert('Crypto added successfully');
+        reloadWallet();
+        fetchDollar()
+    } else {
+        alert('Failed to add crypto');
+    }
+    const cryptos = await response.json();
+
+    fetchDollar()
+    return cryptos;
+}
+
+async function transferirCrypto() {
+    const selectTransfer = document.getElementById('selectTransfer');
+    const selectTransfer2 = document.getElementById('selectTransfer2');
+    const transferirAmount = document.getElementById('transferirAmount');
+    
+    const selectedOption = selectTransfer.options[selectTransfer.selectedIndex];
+    const selectedOption2 = selectTransfer2.options[selectTransfer2.selectedIndex];
+   
+    const symbol = selectedOption.dataset.symbol;
+    const symbol2 = selectedOption2.dataset.symbol;
+    const amount = transferirAmount.value;
+
+
+    if (!symbol || !symbol2 || !amount) {
+        alert('Por favor, preencha todos os campos');
+        return;
+    }
+    const amountNumber = parseFloat(amount);
+    if (isNaN(amountNumber)) return alert(console.error("O valor não é um número válido."))
+        
+    const response = await fetch('/transferirCrypto', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            symbol,
+            symbol2,
+            amount:amountNumber
+        })
+    });
+    if (response.ok) {
+        alert('Crypto transferido com sucesso');
+        reloadWallet();
+        fetchDollar();
+    } else {
+        // Mensagem de erro
+        console.log(response.json())
+        alert('Falha ao transferir crypto');
+    }
+}
+
 async function reloadWallet() {
     const response = await fetch('/wallets');
     const wallet = await response.json();
 
-    console.log(wallet)
+    fetchDollar();
+    updateTranfers();
 
     const cryptoList = document.getElementById('cryptos');
     cryptoList.innerHTML = '';
@@ -55,11 +147,16 @@ async function reloadWallet() {
         // Criar o botão
         const button = document.createElement('button');
         button.classList.add('button')
-        button.classList.add('gray')
         button.textContent = 'Transferir';
-
         button.addEventListener('click', () => {
-            sexoFuncional("papel");
+            openModal2(crypto.symbol);
+        });
+
+        const button2 = document.createElement('button');
+        button2.classList.add('button')
+        button2.textContent = 'Retirar';
+        button2.addEventListener('click', () => {
+            openModal3(crypto.symbol);
         });
 
         const cryptoInfo = document.createElement('div');
@@ -77,6 +174,7 @@ async function reloadWallet() {
 
         headingDiv.appendChild(heading);
         headingDiv.appendChild(button);
+        headingDiv.appendChild(button2);
         cryptoDiv.appendChild(headingDiv);
         cryptoDiv.appendChild(cryptoInfo);
 
@@ -108,6 +206,8 @@ async function addCrypto() {
     if (response.ok) {
         alert('Crypto added successfully');
         reloadWallet();
+        fetchDollar()
+        updateTranfers();
     } else {
         alert('Failed to add crypto');
     }
@@ -126,6 +226,29 @@ async function updateCryptoSelect() {
             option.dataset.symbol = crypto.symbol;
             cryptoSelect.appendChild(option);
         }
+    });
+}
+
+async function updateTranfers() {
+    const cryptos = await fetchWallet();
+    const cryptoSelect = document.getElementById('selectTransfer');
+    cryptoSelect.innerHTML = '<option value="dollar" data-symbol="dollar">Dollar</option>';
+    const cryptoSelect2 = document.getElementById('selectTransfer2');
+    cryptoSelect2.innerHTML = '<option value="dollar" data-symbol="dollar">Dollar</option>';
+    cryptos.forEach(crypto => {
+        const option = document.createElement('option');
+        option.textContent = crypto.name;
+        option.id = crypto.symbol;
+        option.dataset.symbol = crypto.symbol;
+        cryptoSelect.appendChild(option);
+    });
+
+    cryptos.forEach(crypto => {
+        const option = document.createElement('option');
+        option.textContent = crypto.name;
+        option.id = crypto.symbol;
+        option.dataset.symbol = crypto.symbol;
+        cryptoSelect2.appendChild(option);
     });
 }
 

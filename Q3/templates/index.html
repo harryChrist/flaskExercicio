@@ -17,6 +17,7 @@
             <h2>Saldo em Dólares:</h2>
             <p id="balanceAmount">$0.00</p>
             <button type="button" onclick="openModal()">Adicionar Saldo</button>
+            <button type="button" onclick="openModal2()">Transferir</button>
         </div>
         <div class="controls">
             <input type="text" id="searchInput" placeholder="Search for a cryptocurrency">
@@ -36,7 +37,25 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Adicionar Saldo em Dólares</h2>
             <input type="number" id="dollarAmount" placeholder="Enter amount in dollars">
-            <button onclick="addBalance()">Adicionar</button>
+            <button onclick="addDollar()">Adicionar</button>
+        </div>
+    </div>
+
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal2()">&times;</span>
+            <h2>Trocar Dinheiro entre moedas</h2>
+            <div style="display: flex; align-items: center; justify-content: space-around;">
+                <select id="selectTransfer">
+                    <option value="dollar">Dollar</option>
+                </select>
+                <p> ==>>></p>
+                <select id="selectTransfer2">
+                    <option value="dollar">Dollar</option>
+                </select>
+            </div>
+            <input type="number" id="transferirAmount" placeholder="Enter amount in crypto">
+            <button onclick="transferirCrypto()">Transferir</button>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
